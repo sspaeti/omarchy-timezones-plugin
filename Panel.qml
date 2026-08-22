@@ -111,6 +111,24 @@ Panel {
   readonly property string homeDate: ready ? Model.dateLabel(nowUtc, homeRow.offsetMin) : ""
   property int hoverCol: -1
 
+  // ---- Keyboard column navigation. Same selection the mouse drives, so a
+  //      keypress and a hover are indistinguishable to the rest of the panel.
+  readonly property string keyBack: Model.navKey(setting("keyBack", "b"), "b")
+  readonly property string keyForward: Model.navKey(setting("keyForward", "f"), "f")
+
+  // The first press steps off the column "now" sits in — landing on it would
+  // look like nothing happened, since that is exactly what the unselected
+  // headers already show.
+  function moveHoverCol(step) {
+    if (!ready) return
+    var from = hoverCol >= 0 ? hoverCol : Math.floor(nowCol)
+    hoverCol = Math.max(0, Math.min(23, from + step))
+  }
+
+  // The grid is one home day, so a stale selection would misread as "now"
+  // on the next open. Covers every close path, not just root.close().
+  onOpenedChanged: if (!opened) hoverCol = -1
+
   // What the bar pill shows on hover.
   readonly property string compactLabel: ready ? Model.compactLabel(zones, nowUtc) : ""
 
@@ -183,6 +201,15 @@ Panel {
       anchors.fill: parent
       onCloseRequested: root.close()
       onTabRequested: function(direction) { root.switchPanel(direction) }
+      // Arrows (and h/l, which the catcher folds into the same signal) never
+      // reach onTextKey, so horizontal moves are wired here as well — that is
+      // also what lets "h"/"l" work when configured as keyBack/keyForward.
+      onMoveRequested: function(dx, dy) { if (dx !== 0) root.moveHoverCol(dx) }
+      onTextKey: function(text) {
+        var key = String(text).toLowerCase()
+        if (key === root.keyBack) root.moveHoverCol(-1)
+        else if (key === root.keyForward) root.moveHoverCol(1)
+      }
 
       Column {
         id: rowsCol

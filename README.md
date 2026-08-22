@@ -39,6 +39,9 @@ omarchy plugin add https://github.com/sspaeti/omarchy-timezones-plugin.git --ena
 - **Hover** the globe icon: compact view, e.g. `NY 07:12 · SF 04:12`
 - **Left click**: open/close the hour-grid popup (Escape also closes)
 - **Hover a column** in the popup: converts that moment across all zones
+- **`b` / `f`** (or ←/→) while the popup is open: step the selected column back
+  and forward without the mouse. The first press starts from the current hour;
+  the selection clears when the popup closes.
 - **Middle click**: refresh timezone offsets
 - **Right click**: open worldtimebuddy.com in the browser
 
@@ -77,6 +80,12 @@ The bar icon can be changed with `icon` — see below for the default and altern
 - `homeZones` — system timezones that keep the home row's configured label.
   Outside this list (traveling), the home row is relabeled by where the system
   clock actually is. Empty (default): always label by the system timezone.
+- `keyBack` / `keyForward` — the keys that step the selected column back and
+  forward while the popup is open (defaults `"b"` and `"f"`, matching readline).
+  Single characters, matched case-insensitively; anything longer falls back to
+  the default. `j`, `k`, `x`, Tab, Escape, Enter and Space are claimed by the
+  shell's panel navigation and can't be rebound here — `h` and `l` can, since
+  they already move the column.
 - `icon` — bar glyph, default `󱉊` (md-web_clock: globe with a small clock
   badge, most literally "timezone"). Not plain md-earth/md-globe — those
   render 1-2px smaller and lower than sibling bar icons in JetBrainsMono

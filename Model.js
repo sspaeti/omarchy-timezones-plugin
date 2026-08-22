@@ -71,6 +71,15 @@ function plainText(value) {
   return String(value === null || value === undefined ? "" : value).replace(/[<>&]/g, "")
 }
 
+// A configured navigation key normalized for comparison against the single
+// characters PanelKeyCatcher reports. Anything that isn't exactly one
+// character falls back to the default, so a typo ("back", "") leaves the
+// binding working instead of silently dead.
+function navKey(value, fallback) {
+  var key = String(value === null || value === undefined ? "" : value)
+  return (key.length === 1 ? key : String(fallback)).toLowerCase()
+}
+
 function pad2(n) {
   return (n < 10 ? "0" : "") + n
 }
@@ -138,6 +147,7 @@ if (typeof module !== "undefined") {
     dateLabel: dateLabel,
     diffLabel: diffLabel,
     nowColumn: nowColumn,
+    navKey: navKey,
     compactLabel: compactLabel,
     plainText: plainText,
     defaultZones: defaultZones
