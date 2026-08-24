@@ -10,10 +10,9 @@ BarWidget {
   id: root
   moduleName: "io.github.sspaeti.timezones"
 
-  // Sanitized because WidgetButton's internal Text uses AutoText, which
-  // would rich-text-parse a crafted setting. See README's Configure section
-  // for why this glyph rather than the plain earth/globe ones, and for other
-  // icon choices.
+  // Sanitized as an extra boundary around user-provided settings. See the
+  // README's Configure section for why this glyph rather than the plain
+  // earth/globe ones, and for other icon choices.
   readonly property string icon: Model.plainText(setting("icon", "󱉊"))
   readonly property string wtbUrl: setting("worldtimebuddyUrl", "https://www.worldtimebuddy.com/pdt-to-switzerland-bern")
 
@@ -95,8 +94,37 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
-    text: root.expanded ? root.icon + "   " + root.compact : root.icon
+    text: ""
+    labelVisible: false
+    hasVisualContent: true
+    fixedWidth: root.vertical ? -1 : Math.max(12, contentRow.implicitWidth + scaledHorizontalMargin * 2)
     tooltipText: ""
+
+    Row {
+      id: contentRow
+      anchors.left: parent.left
+      anchors.leftMargin: button.scaledHorizontalMargin
+      anchors.verticalCenter: parent.verticalCenter
+
+      Text {
+        text: root.icon
+        textFormat: Text.PlainText
+        color: button.active && button.useActiveColor ? button.activeColor : button.foreground
+        font.family: button.fontFamily
+        font.pixelSize: button.fontSize
+        renderType: Text.NativeRendering
+      }
+
+      Text {
+        visible: root.expanded
+        text: "   " + root.compact
+        textFormat: Text.PlainText
+        color: button.active && button.useActiveColor ? button.activeColor : button.foreground
+        font.family: button.fontFamily
+        font.pixelSize: button.fontSize
+        renderType: Text.NativeRendering
+      }
+    }
 
     onPressed: function(b) {
       if (!root.bar) return
