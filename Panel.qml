@@ -56,8 +56,14 @@ Panel {
     return false
   }
 
+  // An installed plugin is handed a PluginBarApi facade rather than the Bar
+  // itself, and there this property is read-only — assigning to it throws, and
+  // the throw aborts close() before it reaches controller.hide(). Go through
+  // the setter the facade exposes, keeping the assignment as the fallback.
   function setCenterHoverRevealSuppressed(value) {
-    if (root.bar && "centerHoverRevealSuppressed" in root.bar)
+    if (root.bar && typeof root.bar.setCenterHoverRevealSuppressed === "function")
+      root.bar.setCenterHoverRevealSuppressed(value)
+    else if (root.bar && "centerHoverRevealSuppressed" in root.bar)
       root.bar.centerHoverRevealSuppressed = value
   }
 
