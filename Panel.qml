@@ -56,8 +56,16 @@ Panel {
     return false
   }
 
+  // The bar surface handed to an installed plugin (Ui/PluginBarApi.qml) exposes
+  // centerHoverRevealSuppressed as a readonly mirror plus a setter, so assigning
+  // the property throws. The throw aborts close() before controller.hide(), and
+  // the panel's full-screen keyboard layer then stays up with no way to dismiss
+  // it, which locks up every input. Prefer the setter, as the first-party clock
+  // and weather panels do.
   function setCenterHoverRevealSuppressed(value) {
-    if (root.bar && "centerHoverRevealSuppressed" in root.bar)
+    if (root.bar && typeof root.bar.setCenterHoverRevealSuppressed === "function")
+      root.bar.setCenterHoverRevealSuppressed(value)
+    else if (root.bar && "centerHoverRevealSuppressed" in root.bar)
       root.bar.centerHoverRevealSuppressed = value
   }
 
