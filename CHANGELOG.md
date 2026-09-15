@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Show sub-hour UTC offsets in the hour grid: a zone offset by `:30`/`:45`
+  (Kathmandu, Kolkata, Chatham) drew a strip identical to a whole-hour zone,
+  because the cell kept only the truncated hour. Those minutes are now drawn
+  under it.
+
 ## 1.1.0
 
 - Fix the panel never closing once opened on Omarchy shells that hand
