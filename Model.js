@@ -45,11 +45,12 @@ function localFields(utcMs, offsetMin) {
 
 var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
-// One grid cell: the zone-local hour at home-day column `col`.
+// One grid cell: the zone-local hour and minute at home-day column `col`.
 function cell(col, dayStartUtcMs, offsetMin) {
   var f = localFields(dayStartUtcMs + col * 3600000, offsetMin)
   return {
     hour: f.hour,
+    minute: f.minute,
     isMidnight: f.hour === 0,
     dayLabel: WEEKDAYS[f.weekday] + " " + f.day,
     tint: tintFor(f.hour)
@@ -93,6 +94,11 @@ function timeLabel(nowUtcMs, offsetMin, use12Hour) {
 function hourLabel(hour, use12Hour) {
   if (!use12Hour) return String(hour)
   return hour12(hour) + (hour < 12 ? "a" : "p")
+}
+
+// Minutes under the hour for a zone offset by :30/:45; "" on the hour.
+function minuteLabel(minute) {
+  return minute === 0 ? "" : pad2(minute)
 }
 
 // Display modes, in the order the `t` key cycles them: 24-hour, AM/PM, and
@@ -180,6 +186,7 @@ if (typeof module !== "undefined") {
     hour12: hour12,
     timeLabel: timeLabel,
     hourLabel: hourLabel,
+    minuteLabel: minuteLabel,
     normalizeHourFormat: normalizeHourFormat,
     nextHourFormat: nextHourFormat,
     utcZone: utcZone,

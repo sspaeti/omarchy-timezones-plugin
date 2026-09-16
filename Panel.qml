@@ -360,6 +360,7 @@ Panel {
                 model: zoneItem.rowReady ? 24 : 0
 
                 Rectangle {
+                  id: cellRect
                   required property int index
                   readonly property var c: Model.cell(index, root.dayStart, zoneItem.zoneRow.offsetMin)
                   readonly property bool hot: index === root.hoverCol
@@ -370,17 +371,35 @@ Panel {
                        : c.tint === "day" ? Qt.alpha(root.fg, hot ? 0.24 : 0.10)
                        : Qt.alpha(root.fg, hot ? 0.16 : 0.035)
 
-                  Text {
+                  // Sub-hour zones stack their minutes under the hour, as
+                  // worldtimebuddy does; whole-hour zones keep one line.
+                  Column {
                     anchors.centerIn: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    lineHeight: 0.85
-                    text: c.isMidnight ? c.dayLabel.replace(" ", "\n") : Model.hourLabel(c.hour, root.use12Hour)
-                    color: c.isMidnight ? root.fg
-                         : c.tint === "night" ? Qt.darker(root.fg, 1.6)
-                         : root.fg
-                    font.family: root.fontFam
-                    font.pixelSize: c.isMidnight ? Style.font.caption - 2 : Style.font.caption
-                    font.bold: c.isMidnight
+                    spacing: 0
+
+                    Text {
+                      anchors.horizontalCenter: parent.horizontalCenter
+                      horizontalAlignment: Text.AlignHCenter
+                      lineHeight: 0.85
+                      text: cellRect.c.isMidnight ? cellRect.c.dayLabel.replace(" ", "\n")
+                                                  : Model.hourLabel(cellRect.c.hour, root.use12Hour)
+                      color: cellRect.c.isMidnight ? root.fg
+                           : cellRect.c.tint === "night" ? Qt.darker(root.fg, 1.6)
+                           : root.fg
+                      font.family: root.fontFam
+                      font.pixelSize: cellRect.c.isMidnight ? Style.font.caption - 2 : Style.font.caption
+                      font.bold: cellRect.c.isMidnight
+                    }
+
+                    Text {
+                      anchors.horizontalCenter: parent.horizontalCenter
+                      visible: text !== ""
+                      text: cellRect.c.isMidnight ? "" : Model.minuteLabel(cellRect.c.minute)
+                      color: cellRect.c.tint === "night" ? Qt.darker(root.fg, 2.0)
+                                                         : Qt.darker(root.fg, 1.4)
+                      font.family: root.fontFam
+                      font.pixelSize: Math.max(6, Style.font.caption - 3)
+                    }
                   }
                 }
               }
