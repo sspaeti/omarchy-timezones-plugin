@@ -95,6 +95,9 @@ The bar icon can be changed with `icon` — see below for the default and altern
   - `abbr` — optional override for the timezone abbreviation shown in
     parentheses (tzdata calls the Philippines "PST", which reads wrong next to
     Pacific time — override with "PHT").
+- `barZones` — optional list of `shortLabel`s to show in the bar's hover view,
+  e.g. `["NY", "SF"]`. The popup still lists every zone in `zones`. Empty or
+  missing (default): the hover view shows all non-home zones.
 - `homeZones` — system timezones that keep the home row's configured label.
   Outside this list (traveling), the home row is relabeled by where the system
   clock actually is. Empty (default): always label by the system timezone.

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `barZones` setting: choose which zones the bar's hover view shows by
+  `shortLabel`, independent of the rows in the popup.
+
 ## 1.1.0
 
 - Fix the panel never closing once opened on Omarchy shells that hand

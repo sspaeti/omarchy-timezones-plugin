@@ -159,7 +159,7 @@ Panel {
   onOpenedChanged: if (!opened) hoverCol = -1
 
   // What the bar pill shows on hover.
-  readonly property string compactLabel: ready ? Model.compactLabel(zones, nowUtc, use12Hour) : ""
+  readonly property string compactLabel: ready ? Model.compactLabel(zones, nowUtc, use12Hour, setting("barZones", [])) : ""
 
   // ---- `p`: copy the popup as a PNG to the clipboard — hovered/selected
   //      column and its converted times included — so a future meeting slot
