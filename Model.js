@@ -148,11 +148,14 @@ function nowColumn(nowUtcMs, dayStartUtcMs) {
 }
 
 // Compact bar label shown on hover: "NY 07:12 · SF 04:12 · CDO 19:12".
-function compactLabel(zones, nowUtcMs, use12Hour) {
+// `only` (optional) limits the label to zones whose shortLabel is listed.
+function compactLabel(zones, nowUtcMs, use12Hour, only) {
   var parts = []
+  var filter = only && only.length ? only : null
   for (var i = 0; i < zones.length; i++) {
     var z = zones[i]
     if (z.home || z.offsetMin === undefined || z.offsetMin === null) continue
+    if (filter && filter.indexOf(z.shortLabel) === -1) continue
     parts.push(plainText(z.shortLabel) + " " + timeLabel(nowUtcMs, z.offsetMin, use12Hour))
   }
   return parts.join(" · ")
